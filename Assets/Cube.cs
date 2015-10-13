@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+
 public class Cube : MonoBehaviour
 {
+
     public Vector3 velocity; // The current velocity
     public Vector3 newVelocity; // The velocity for next frame
     public Vector3 newPosition; // The position for next frame
@@ -35,6 +37,18 @@ public class Cube : MonoBehaviour
         Vector3 randomVel = Random.insideUnitSphere;
         // Utilizes the fields set on the CubeSpawner.C Singleton
         newVelocity += randomVel * CubeSpawner.C.velocityMatchingAmt;
+
+        Vector3 dist;
+        dist = CubeSpawner.C.mousePos - this.transform.position;
+        if (dist.magnitude > CubeSpawner.C.mouseAvoidanceDist)
+        {
+            newVelocity += dist * CubeSpawner.C.mouseAttractionAmt;
+        }
+        else
+        {
+            // If the mouse is too close, move away quickly!
+            newVelocity -= dist.normalized * CubeSpawner.C.mouseAvoidanceAmt;
+        }
     }
 
     void LateUpdate()
